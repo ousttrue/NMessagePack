@@ -18,7 +18,7 @@ namespace NMessagePack
         public void fix_raw()
         {
             var src = new Byte[] { 0, 1, 2 };
-            var bytes=Serializer.Pack(src);
+            var bytes=Serializer.Serialize(src);
 
             Byte[] v=Deserializer.Deserialize<Byte[]>(bytes);
             Assert.AreEqual(src, v);
@@ -28,7 +28,7 @@ namespace NMessagePack
         public void raw16()
         {
             var src = Enumerable.Range(0, 50).Select(x =>(Byte)x).ToList();
-            var bytes =  Serializer.Pack(src);
+            var bytes =  Serializer.Serialize(src);
 
             Byte[] v=Deserializer.Deserialize<Byte[]>(bytes);
             Assert.AreEqual(src.ToArray(), v);

@@ -27,7 +27,7 @@ namespace NMessagePack
                 0x3f, 0x8c, 0xcc, 0xcd
             };
 
-            var bytes = Serializer.Pack(i);
+            var bytes = Serializer.Serialize(i);
 
             var value = MsgPackValue.Parse(bytes);
             var body = value.GetBody();
@@ -44,7 +44,7 @@ namespace NMessagePack
                 0x3f, 0xf1, 0x99, 0x99, 0x99, 0x99, 0x99, 0x9a,
             };
 
-            var bytes = Serializer.Pack(i);
+            var bytes = Serializer.Serialize(i);
 
             var value = MsgPackValue.Parse(bytes);
             var body = value.GetBody();

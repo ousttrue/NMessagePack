@@ -21,7 +21,7 @@ namespace NMessagePack
         [Test]
         public void fix_map()
         {
-            var bytes = Serializer.PackMap(
+            var bytes = Serializer.SerializeMap(
                 0, 1, 
                 2, 3);
 

@@ -32,7 +32,7 @@ namespace NMessagePack
             }
 
             {
-                var bytes = Serializer.Pack((object)null);
+                var bytes = Serializer.Serialize((object)null);
                 Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes);
 
                 Object j = Deserializer.Deserialize<Object>(bytes);
@@ -43,7 +43,7 @@ namespace NMessagePack
         [Test]
         public void True()
         {
-            var bytes = Serializer.Pack(true);
+            var bytes = Serializer.Serialize(true);
             Assert.AreEqual(new Byte[] { 0xC3 }, bytes);
 
             var value = MsgPackValue.Parse(bytes);
@@ -54,7 +54,7 @@ namespace NMessagePack
         [Test]
         public void False()
         {
-            var bytes = Serializer.Pack(false);
+            var bytes = Serializer.Serialize(false);
             Assert.AreEqual(new Byte[] { 0xC2 }, bytes);
 
             var value = MsgPackValue.Parse(bytes);

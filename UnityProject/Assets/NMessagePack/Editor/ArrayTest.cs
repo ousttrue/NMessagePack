@@ -16,7 +16,7 @@ namespace NMessagePack
         [Test]
         public void fix_array()
         {
-            var bytes = Serializer.PackArray(0, 1, false, (Object)null);
+            var bytes = Serializer.SerializeArray(0, 1, false, (Object)null);
 
             Assert.AreEqual(new Byte[]{
                 (Byte)MsgPackType.FIX_ARRAY_0x4,
@@ -39,7 +39,7 @@ namespace NMessagePack
         public void array16()
         {
             var data = Enumerable.Range(0, 20).Select(x => (Object)x).ToArray();            
-            var bytes = Serializer.Pack(data);
+            var bytes = Serializer.Serialize(data);
 
             var value = MsgPackValue.Parse(bytes);
             Assert.AreEqual(true, value.FormatType.IsArray());

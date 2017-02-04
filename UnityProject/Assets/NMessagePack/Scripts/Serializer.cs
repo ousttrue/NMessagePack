@@ -132,7 +132,7 @@ namespace NMessagePack
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static Byte[] Pack<T>(T t)
+        public static Byte[] Serialize<T>(T t)
         {
             var s = GetSerializer<T>();
             using (var ms = new MemoryStream())
@@ -143,7 +143,7 @@ namespace NMessagePack
             }
         }
 
-        public static Byte[] PackArray<T0, T1, T2>(T0 t0, T1 t1, T2 t2)
+        public static Byte[] SerializeArray<T0, T1, T2>(T0 t0, T1 t1, T2 t2)
         {
             var s0 = GetSerializer<T0>();
             var s1 = GetSerializer<T1>();
@@ -158,7 +158,7 @@ namespace NMessagePack
                 return ms.ToArray();
             }
         }
-        public static Byte[] PackArray<T0, T1, T2, T3>(T0 t0, T1 t1, T2 t2, T3 t3)
+        public static Byte[] SerializeArray<T0, T1, T2, T3>(T0 t0, T1 t1, T2 t2, T3 t3)
         {
             var s0 = GetSerializer<T0>();
             var s1 = GetSerializer<T1>();
@@ -176,7 +176,7 @@ namespace NMessagePack
             }
         }
 
-        public static Byte[] PackMap<K0, V0, K1, V1>(K0 k0, V0 v0, K1 k1, V1 v1)
+        public static Byte[] SerializeMap<K0, V0, K1, V1>(K0 k0, V0 v0, K1 k1, V1 v1)
         {
             var s0 = GetSerializer<K0>();
             var s1 = GetSerializer<V0>();
