@@ -11,7 +11,8 @@ namespace NMessagePack
         [SetUp]
         public void Setup()
         {
-            
+            Serializer.Clear();
+            Deserializer.Clear();
         }
 
         [Test]

@@ -3,7 +3,7 @@ using System;
 
 namespace NMessagePack.Serializers
 {
-    public class LambdaSerializer<T> : Serializer<T>
+    public class LambdaSerializer<T> : SerializerBase<T>
     {
         public delegate void SerializeFunc(MsgPackWriter w, T t);
 

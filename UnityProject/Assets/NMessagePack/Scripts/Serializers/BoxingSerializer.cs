@@ -2,7 +2,7 @@ using System;
 
 
 namespace NMessagePack.Serializers {
-    public class BoxingSerializer : Serializer<Object>
+    public class BoxingSerializer : SerializerBase<Object>
     {
         protected override void NonNullSerialize(MsgPackWriter w, object o)
         {

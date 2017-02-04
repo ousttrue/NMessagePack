@@ -9,14 +9,20 @@ namespace NMessagePack
 {
     public static class Deserializer
     {
-        static Dictionary<Type, IDeserializer> m_deserializerMap;
+        public static void Clear()
+        {
+            s_deserializerMap = null;
+            s_extendedDeserializers = null;
+        }
+
+        static Dictionary<Type, IDeserializer> s_deserializerMap;
         static Dictionary<Type, IDeserializer> DeserializerMap
         {
             get
             {
-                if (m_deserializerMap == null)
+                if (s_deserializerMap == null)
                 {
-                    m_deserializerMap = new Dictionary<Type, IDeserializer>
+                    s_deserializerMap = new Dictionary<Type, IDeserializer>
                     {
                         {typeof(Boolean),  new LambdaDeserilaizer<Boolean>( v => v.GetValue<Boolean>() ) },
                         {typeof(Byte),  new LambdaDeserilaizer<Byte>( v => v.GetValue<Byte>() ) },
@@ -34,7 +40,19 @@ namespace NMessagePack
                         {typeof(Object), new LambdaDeserilaizer<Object>( v=>v.GetValue() )},
                 };
                 }
-                return m_deserializerMap;
+                return s_deserializerMap;
+            }
+        }
+
+        static List<Func<Type, IDeserializer>> s_extendedDeserializers;
+        public static List<Func<Type, IDeserializer>> ExtendedDeserializers
+        {
+            get {
+                if (s_extendedDeserializers == null)
+                {
+                    s_extendedDeserializers = new List<Func<Type, IDeserializer>>();
+                }
+                return s_extendedDeserializers;
             }
         }
 
@@ -86,7 +104,16 @@ namespace NMessagePack
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
 
-            throw new NotImplementedException();
+            foreach (var ex in ExtendedDeserializers)
+            {
+                var d = ex(t);
+                if (d != null)
+                {
+                    return d;
+                }
+            }
+
+            throw new NotImplementedException("no deserializer for " + t);
         }
 
         public static T Deserialize<T>(Byte[] bytes)

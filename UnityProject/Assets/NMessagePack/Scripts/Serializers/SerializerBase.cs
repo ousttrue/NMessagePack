@@ -2,7 +2,7 @@ using System;
 
 namespace NMessagePack.Serializers
 {
-    public abstract class Serializer<T> : ISerializer
+    public abstract class SerializerBase<T> : ISerializer
     {
         public void Serialize(MsgPackWriter w, object o)
         {
@@ -31,7 +31,7 @@ namespace NMessagePack.Serializers
         protected abstract void NonNullSerialize(MsgPackWriter w, T t);
     }
 
-    public class NullSerializer : Serializer<Object>
+    public class NullSerializer : SerializerBase<Object>
     {
         protected override void NonNullSerialize(MsgPackWriter w, object t)
         {

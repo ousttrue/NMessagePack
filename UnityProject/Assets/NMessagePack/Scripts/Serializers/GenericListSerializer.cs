@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace NMessagePack.Serializers
 {
-    public class GenericListSerializer<T> : Serializer<IList<T>>
+    public class GenericListSerializer<T> : SerializerBase<IList<T>>
     {
-        Serializer<T> m_serializer;
+        SerializerBase<T> m_serializer;
 
         public GenericListSerializer()
         {

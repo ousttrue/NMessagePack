@@ -9,14 +9,20 @@ namespace NMessagePack
 {
     public static class Serializer
     {
-        static Dictionary<Type, ISerializer> m_serializerMap;
+        public static void Clear()
+        {
+            s_serializerMap = null;
+            s_extendedSerializers = null;
+        }
+
+        static Dictionary<Type, ISerializer> s_serializerMap;
         static Dictionary<Type, ISerializer> SerializerMap
         {
             get
             {
-                if (m_serializerMap == null)
+                if (s_serializerMap == null)
                 {
-                    m_serializerMap = new Dictionary<Type, ISerializer>
+                    s_serializerMap = new Dictionary<Type, ISerializer>
                     {
                         {typeof(Boolean), new LambdaSerializer<Boolean>((w, x)=> w.MsgPack(x)) },
                         {typeof(Byte), new LambdaSerializer<Byte>((w, x)=> w.MsgPack(x))},
@@ -32,11 +38,23 @@ namespace NMessagePack
                         {typeof(String), new LambdaSerializer<String>((w, x)=>w.MsgPack(x))},
                     };
                 }
-                return m_serializerMap;
+                return s_serializerMap;
             }
         }
 
-        public static Serializer<Object> NilSerializer = new NullSerializer();
+        public static SerializerBase<Object> NilSerializer = new NullSerializer();
+
+        public static List<Func<Type, ISerializer>> s_extendedSerializers;
+        public static List<Func<Type, ISerializer>> ExtendedSerializers
+        {
+            get {
+                if (s_extendedSerializers==null)
+                {
+                     s_extendedSerializers = new List<Func<Type, ISerializer>>();
+                }
+                return s_extendedSerializers;
+            }
+        }
 
         public static ISerializer GetSerializer(Type t)
         {
@@ -53,30 +71,32 @@ namespace NMessagePack
             return s;
         }
 
-        public static Serializer<T> GetSerializer<T>(T value)
+        /*
+        public static SerializerBase<T> GetSerializer<T>(T value)
         {
             return GetSerializer<T>();
         }
+        */
 
-        public static Serializer<T> GetSerializer<T>()
+        public static SerializerBase<T> GetSerializer<T>()
         {
             var t = typeof(T);
             var s = default(ISerializer);
             if (SerializerMap.TryGetValue(t, out s))
             {
-                return (Serializer<T>)s;
+                return (SerializerBase<T>)s;
             }
 
             s = BuildSerializer<T>();
 #if true
             SerializerMap.Add(t, s);
 #endif
-            return (Serializer<T>)s;
+            return (SerializerBase<T>)s;
         }
 
-        static Serializer<T> BuildSerializer<T>()
+        static SerializerBase<T> BuildSerializer<T>()
         {
-            return (Serializer<T>)BuildSerializer(typeof(T));
+            return (SerializerBase<T>)BuildSerializer(typeof(T));
         }
 
         static ISerializer BuildSerializer(Type t)
@@ -117,15 +137,24 @@ namespace NMessagePack
                 Type constructedType = typeof(CollectionSerializer<>).MakeGenericType(t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
-            else if(t.IsClass)
+
+            foreach (var ex in ExtendedSerializers)
+            {
+                var s = ex(t);
+                if (s != null)
+                {
+                    return s;
+                }
+            }
+
+            if (t.IsClass)
             {
                 // Object
                 return NilSerializer;
             }
 
-            throw new NotImplementedException();
+            throw new NotImplementedException("no serialzier for " + t);
         }
-
 
         /// <summary>
         /// MsgPackでシリアライスする。1引数

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace NMessagePack.Serializers
 {
-    public class GenericMapSerializer<K, V> : Serializer<IDictionary<K, V>>
+    public class GenericMapSerializer<K, V> : SerializerBase<IDictionary<K, V>>
     {
-        Serializer<K> m_keySerializer;
-        Serializer<V> m_valueSerializer;
+        SerializerBase<K> m_keySerializer;
+        SerializerBase<V> m_valueSerializer;
 
         public GenericMapSerializer()
         {

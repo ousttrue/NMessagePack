@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace NMessagePack.Serializers
 {
-    public class MapSerializer<T> : Serializer<T>
+    public class MapSerializer<T> : SerializerBase<T>
         where T : IDictionary
     {
         BoxingSerializer m_serializser;

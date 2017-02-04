@@ -3,7 +3,7 @@ using System;
 
 namespace NMessagePack.Serializers
 {
-    public class EnumSerializer<T> : Serializer<T>
+    public class EnumSerializer<T> : SerializerBase<T>
     {
         ISerializer m_serializer;
         public EnumSerializer()

@@ -8,6 +8,13 @@ namespace NMessagePack
     [TestFixture]
     public class StringTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            Serializer.Clear();
+            Deserializer.Clear();
+        }
+
         [Test]
         public void str()
         {
